@@ -14,6 +14,10 @@ function formValidation() {
     } else if (useremail === "") {
         alert('please enter Email')
         return false
+    } else if (useremailincludes("@") == fasle) {
+        alert("please enter valid email")
+        return false;
+
     } else if (userphonenumber === "") {
         alert('please enter phone number')
         return false
