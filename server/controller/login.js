@@ -3,6 +3,8 @@
 
 const User = require('../model/user');
 
+const bcrypt = require('bcrypt')
+
 
 exports.postloginuser = async (req, res, next) => {
 
@@ -10,17 +12,35 @@ exports.postloginuser = async (req, res, next) => {
 
     let useremailexistinDb = await User.findOne({ where: { useremail: useremail } })
 
+    console.log(useremailexistinDb)
+
     if (!useremailexistinDb) {
-        return res.status(404).send({ data: "User not found" })
+        return res.status(404).json({ data: "User not found" })
     }
 
-    // console.log(useremailexistinDb)
-    // console.log(useremailexistinDb.dataValues.userpassword);
-    // console.log(userpassword)
-    if (useremailexistinDb.dataValues.userpassword.length != userpassword && useremailexistinDb.dataValues.userpassword != userpassword) {
-        return res.status(401).send({ data: "User not authorized" })
-    }
 
-    return res.status(200).send({ successfullylogged: true })
+    bcrypt.compare(userpassword, useremailexistinDb.dataValues.userpassword, (err, response) => {
+
+
+        if (err) {
+            return res.status(500).json({ message: "something went wrong" })
+
+        }
+
+        if (response) {
+
+            res.status(200).json({ successfullylogged: true })
+        } else {
+
+
+            res.status(401).json({ data: "User not authorized" })
+
+        }
+
+
+    })
+
 
 }
+
+
