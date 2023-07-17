@@ -6,49 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignUpPage</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 
 <body>
 
     <div class="outer-box">
         <div class="inner-box">
-            <header class="signup-header">
-                <h1>Signup</h1>
+            <header class="login-header">
+                <h1>Login</h1>
 
             </header>
-            <main class="signup-body">
+            <main class="login-body">
                 <form action="">
-                    <p>
-                        <label for="name">Name</label>
-                        <input type="text" id="name" placeholder="Enter Your Name" required>
-                    </p>
+
                     <p>
                         <label for="email">Email</label>
                         <input type="email" id="email" placeholder="Enter Your Email" required>
                     </p>
-                    <p>
-                        <label for="phonenumber">PhoneNumber</label>
-                        <input type="email" id="phonenumber" placeholder="Enter Phone Number" required>
-                    </p>
+
                     <p>
                         <label for="password"> Password</label>
                         <input type="password" id="password" placeholder="at least 5 characters" required>
                     </p>
                     <p>
-                        <button type="submit" id="create-user-button" class="createuserbutton">SignUp</button>
+                        <button type="submit" id="login-user-button" class="loginuserbutton">Login</button>
                     </p>
                 </form>
             </main>
 
-            <footer class="signup-footer">
-                <p>Existing User <a href="./loginPage/login.html">Login</a> </p>
+            <footer class="login-footer">
+                <p>New User <a href="../index.html">SignUp</a> </p>
             </footer>
 
         </div>
 
     </div>
-    <script src="script.js"></script>
+    <script src="./login.js"></script>
 </body>
 
 </html>

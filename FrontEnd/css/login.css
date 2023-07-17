@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.outer-box {
+    width: 100vw;
+    height: 100vh;
+    background:#1589FF
+}
+
+.inner-box {
+    width: 400px;
+    margin: 0 auto;
+    position: relative;
+    top: 10%;
+    padding: 20px 40px;
+    background: #dfd;
+   
+    border-radius: 8px;
+
+}
+
+.login-header h1 {
+    font-size: 2.5rem;
+    color: #212121;
+}
+
+.login-header p {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 5px;
+}
+
+.login-body {
+    margin: 20px 0;
+}
+
+.login-body p {
+    margin: 10px 0;
+}
+
+.login-body p label {
+    display: block;
+    font-weight: bold;
+}
+
+.login-body p input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #cccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+
+.login-body p input[type="submit"] {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+
+
+.loginuserbutton{
+    background-color: #3498db;
+     width: 200px;
+     height: 35px;
+     margin-left: 60px;
+     margin-top: 20px;
+     border: 1px solid black;
+     border-radius: 8px;
+    color: white;
+   
+}
+
+.login-footer p {
+    color: #555;
+    text-align: center;
+}
+
+.login-footer p a {
+    color: #2773a5;
+}
+
+
