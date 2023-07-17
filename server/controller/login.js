@@ -1,10 +1,11 @@
 
-
+var globalMailId = "";
 
 const User = require('../model/user');
 
 const bcrypt = require('bcrypt')
 
+const path = require('path')
 
 exports.postloginuser = async (req, res, next) => {
 
@@ -29,6 +30,9 @@ exports.postloginuser = async (req, res, next) => {
 
         if (response) {
 
+            //res.redirect('http://127.0.0.1:5500/FrontEnd/expensespage/expense.html')
+            globalMailId = useremail;
+
             res.status(200).json({ successfullylogged: true })
         } else {
 
@@ -44,3 +48,4 @@ exports.postloginuser = async (req, res, next) => {
 }
 
 
+exports.mailID = globalMailId

@@ -54,7 +54,7 @@ document.getElementById('login-user-button').addEventListener('click', async (e)
             } else if (postDataJson.data === "User not found") {
                 alert("User doesnot exist .. Please create new user by sigining up ")
             } else if (postDataJson.successfullylogged == true) {
-                alert("Successfully Logged in")
+                window.location.replace("../expensespage/expense.html");
             }
 
             document.querySelector('#email').value = "";
