@@ -14,7 +14,7 @@ function formValidation() {
     } else if (useremail === "") {
         alert('please enter Email')
         return false
-    } else if (useremailincludes("@") == fasle) {
+    } else if (useremail.includes("@") == false) {
         alert("please enter valid email")
         return false;
 
