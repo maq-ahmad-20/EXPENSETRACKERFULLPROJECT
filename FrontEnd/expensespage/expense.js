@@ -115,50 +115,91 @@ async function deleteDataOnScreen(id) {
 
 
 
-// buy premium functionality
+// buy premium functionality fetch doesnot fork inside a call back function
+
+// document.querySelector('#buy-premium-button').addEventListener('click', async (e) => {
+//     try {
+//         e.preventDefault();
+//         const token = localStorage.getItem('token');
+//         console.log(token)
+
+//         let paymentreqcors = await fetch(`${url}/purchasepremiermembership`, {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Authorization': token
+//             },
+//             method: 'GET'
+//         })
+//         let paymentreq = await paymentreqcors.json()
+//         console.log(paymentreq.order.id)
+//         console.log(paymentreq.key_id)
+//         var options = {
+//             key: paymentreq.key_id,
+//             order_id: paymentreq.order.id,
+//             handler: async function (response) {
+//                 const postres = await fetch(
+//                     `${url}/updateTransactionStatus`,
+//                     {
+//                         headers: { "Authorization": token },
+//                         method: "POST",
+//                         body: { order_id: options.order_id, payment_id: response.razorpay_payment_id },
+
+//                     });
+//                 const postreqJson = await postres.json()
+//                 console.log(postreqJson);
+//                 alert(
+//                     "Welcome to our Premium Membership, You have now access to Reports and LeaderBoard"
+//                 );
+//                 window.location.reload();
+//                 localStorage.setItem("token", res.data.token);
+//             }
+
+//         }
+//         const rzp1 = new Razorpay(options);
+//         rzp1.open();
+//         e.preventDefault();
+
+//     } catch (err) {
+//         console.log(err);
+//     }
+// })
+
 
 document.querySelector('#buy-premium-button').addEventListener('click', async (e) => {
     try {
-
-        const token = localStorage.getItem('token');
-        console.log(token)
-
-        let paymentreq = await fetch(`${url}/purchasepremiermembership`, {
-            headers: {
-
-                'Authorization': token
-            },
-            method: 'GET'
-        })
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+            `${url}/purchasepremiermembership`,
+            { headers: { Authorization: token } }
+        );
         var options = {
-            key: paymentreq.data.key_id,
-            order_id: paymentreq.data.order.id,
+            key: res.data.key_id,
+            order_id: res.data.order.id,
+
             handler: async function (response) {
-                const res = await fetch(
+                const res = await axios.post(
                     `${url}/updateTransactionStatus`,
-                    { headers: { Authorization: token } },
                     {
-                        body: {
-                            order_id: options.order_id,
-                            payment_id: response.razorpay_payment_id,
-                        }
+                        order_id: options.order_id,
+                        payment_id: response.razorpay_payment_id,
+                    },
+                    { headers: { Authorization: token } }
+                );
 
-                    });
-
-                console.log(response);
+                console.log(res);
                 alert(
-                    "Welcome to our Premium Membership, You have now access to Reports and LeaderBoard"
+                    "Welcome to our Premium Membership"
                 );
                 window.location.reload();
                 localStorage.setItem("token", res.data.token);
-            }
-
-        }
+            },
+        };
         const rzp1 = new Razorpay(options);
         rzp1.open();
         e.preventDefault();
 
     } catch (err) {
-        console.log(err);
+        console.log(err)
     }
-})
+
+});

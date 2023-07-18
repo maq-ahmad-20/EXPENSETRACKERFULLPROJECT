@@ -8,6 +8,7 @@ module.exports.authentiateUser = (req, res, next) => {
         console.log(usertoken) //{userid:1 , iat:value}
         User.findByPk(usertoken.userid).then((user) => {
             req.user = user;
+            console.log("middlewareauthsuccessfullysendingUserinrequest")
             next();
         });
     } catch (err) {

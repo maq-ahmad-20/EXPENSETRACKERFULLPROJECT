@@ -7,7 +7,7 @@ const loginRouter = require('./router/login')
 const User = require('../server/model/user')
 const Expense = require('../server/model/expense')
 const expenseRouter = require('./router/expense')
-const Premiumorders = require('./model/premiumorder')
+const Order = require('./model/premiumorder')
 const premiumOrderRouter = require('./router/premiumorder')
 const app = express();
 
@@ -40,10 +40,11 @@ User.hasMany(Expense);
 
 
 
-User.hasMany(Premiumorders);
-Premiumorders.belongsTo(User);
 
-sequelize.sync().then((result) => {
+Order.belongsTo(User);
+User.hasMany(Order);
+
+sequelize.sync({ alter: true }).then((result) => {
 
     app.listen(7000);
 
