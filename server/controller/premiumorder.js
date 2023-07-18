@@ -1,17 +1,19 @@
-const Premiumorder = require('../model/premiumorder')
+
 const RazorPay = require('razorpay')
-const userController = require('../controller/user')
+const Premiumorder = require('../model/premiumorder')
+
+const loginController = require('../controller/login')
 exports.purchasePremiumMemberShip = async (req, res, mext) => {
 
     try {
 
         var rzp = new RazorPay({
-            key_id: "rzp_test_KaEuNEYFAA8gv1",
-            key_secret: "8qooeTKrpeJ8Atz1lz0OHaWg"
+            key_id: "rzp_test_jVd4hIi6jv6g87",
+            key_secret: "gWgB9SgYs3mWlD61OZymI7OI"
         });
 
         const amount = +1000;
-        rzp.orders.create({ amount: amount, currency: "INR" }, (err, order) => {
+        rzp.orders.create({ amount, currency: "INR" }, (err, order) => {
             if (err) {
                 console.log('Error occured')
                 throw new Error(JSON.stringify(err));
@@ -48,7 +50,7 @@ exports.updateTransactionStatus = async (req, res) => {
                 return res.status(202).json({
                     sucess: true,
                     message: "Transaction Successful",
-                    token: userController.generateAccessToken(userId)
+                    token: loginController.genretareAccessToken(userId)
                 });
             })
             .catch((error) => {

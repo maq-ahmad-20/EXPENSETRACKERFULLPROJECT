@@ -5,6 +5,7 @@ module.exports.authentiateUser = (req, res, next) => {
     try {
         const token = req.header("Authorization");
         const usertoken = jwt.verify(token, 'my_secret_key');
+        console.log(usertoken) //{userid:1 , iat:value}
         User.findByPk(usertoken.userid).then((user) => {
             req.user = user;
             next();

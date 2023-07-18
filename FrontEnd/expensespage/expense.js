@@ -125,8 +125,10 @@ document.querySelector('#buy-premium-button').addEventListener('click', async (e
 
         let paymentreq = await fetch(`${url}/purchasepremiermembership`, {
             headers: {
+
                 'Authorization': token
-            }
+            },
+            method: 'GET'
         })
         var options = {
             key: paymentreq.data.key_id,
@@ -143,7 +145,7 @@ document.querySelector('#buy-premium-button').addEventListener('click', async (e
 
                     });
 
-                console.log(res);
+                console.log(response);
                 alert(
                     "Welcome to our Premium Membership, You have now access to Reports and LeaderBoard"
                 );
