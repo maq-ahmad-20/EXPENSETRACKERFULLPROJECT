@@ -6,8 +6,12 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
     try {
         e.preventDefault();
-
-        let totalData = await fetch(`${url}/getExpense`);
+        const token = localStorage.getItem("token");
+        let totalData = await fetch(`${url}/getAllExpense`, {
+            headers: {
+                'Authorization': token
+            }
+        });
 
         let totalJsonData = await totalData.json();
 
@@ -59,10 +63,11 @@ formbutton.onclick = async function (e) {
         const item = document.querySelector('#item').value;
 
 
-
+        const token = localStorage.getItem("token");
         let fetchData = await fetch(`${url}/addexpense`, {
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': token
 
             },
             method: "POST",
@@ -93,7 +98,11 @@ formbutton.onclick = async function (e) {
 async function deleteDataOnScreen(id) {
 
     try {
-        let deleteData = await fetch(`${url}/deleteuser/` + id, {
+        const token = localStorage.getItem("token");
+        let deleteData = await fetch(`${url}/deleteuserexpense/` + id, {
+            headers: {
+                'Authorization': token
+            },
             method: "DELETE"
         })
 

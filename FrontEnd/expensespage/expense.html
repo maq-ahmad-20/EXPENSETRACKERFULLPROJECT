@@ -10,43 +10,49 @@
 </head>
 
 <body>
-    <div class="outer-box" style="margin-top: 20px;box-sizing: border-box;">
-        <div class="innerbox1" style="position: relative; margin-left: 100px;">
-            <form id="formupdate" style="margin-bottom: 30px">
-                <label for="number" style="margin: 10px,20px,10px,20px;">ExpenseAmount</label>
-                <input type="number" id="expense" name="number" class="form-control"
-                    style="display: inline-block; width: 20% ;" required />
-                <label for="desc" style="margin: 10px,20px,10px,20px;">Description:</label>
-                <input type="text" name="desc" id="desc" class="form-control"
-                    style="display: inline-block; width: 20% ;" required />
-                <label for="item" style="margin: 10px,20px,10px,20px;">Choose a item:</label>
-                <select name="item" id="item" form="item" class="form-control"
-                    style="display: inline-block; width: 20% ;" required>
-                    <option value="Movies">Movies</option>
-                    <option value="Fuel">Fuel</option>
-                    <option value="Food">Food</option>
-                    <option value="Electricity">Electricity</option>
-                </select>
-                <div style="text-align: center; margin-top: 60px;" id="addexpensebox">
-                    <button style="border: 1px solid green; border-radius: 6px; width: 200px ;display: inline;"
-                        id="expenseaddbutton" class="btn-secondary">
+
+    <div class="innerbox1" style="margin-top: 10px;">
+        <div class="form-row ">
+            <form id="formupdate" class="d-flex p-0">
+
+                <div class="form-group col-2 offset-1">
+                    <label for="number">ExpenseAmount</label>
+                    <input type="number" id="expense" name="number" class="form-control" required />
+                </div>
+                <div class="form-group col-2 offset-1 ">
+                    <label for="desc">Description:</label>
+                    <input type="text" name="desc" id="desc" class="form-control" required />
+                </div>
+                <div class="form-group col-2 offset-1">
+                    <label for="item">Choose a item:</label>
+                    <select name="item" id="item" form="item" class="form-control" required>
+                        <option value="Movies">Movies</option>
+                        <option value="Fuel">Fuel</option>
+                        <option value="Food">Food</option>
+                        <option value="Electricity">Electricity</option>
+                    </select>
+                </div>
+                <div id="addexpensebox" class="mb-3 d-flex m-4">
+                    <button id="expenseaddbutton" class=" btn btn-primary">
                         Add Expense
                     </button>
                 </div>
-
         </div>
-
 
         </form>
     </div>
 
-    <div id="user-details" style="display: block; margin-top: 80px ; margin-left: 350px;">
-        <table class="table table-bordered w-75 table-secondary" style="margin-right: 100px;">
-            <thead class="table-primary">
-                <td>ExpenseAmount</td>
-                <td>Description</td>
-                <td>Item</td>
-                <td>DeleteUser</td>
+
+
+    </div>
+    <div class="container mt-4 p-3 " id="table">
+
+        <table class="table table-bordered" style="width:100%">
+            <thead class=" table-primary">
+                <th scope="col">ExpenseAmount</th>
+                <th scope="col">Description</th>
+                <th scope="col">Item</th>
+                <th scope="col">DeleteUser</th>
 
             </thead>
             <tbody>
@@ -58,7 +64,8 @@
         </table>
 
     </div>
-    </div>
+
+
 
 
     <script src="expense.js"></script>

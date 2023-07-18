@@ -6,6 +6,13 @@ const User = require('../model/user');
 const bcrypt = require('bcrypt')
 
 const path = require('path')
+const jwt = require('jsonwebtoken')
+
+
+function genereteAcessToken(id) {
+    return jwt.sign({ userid: id }, 'my_secret_key')
+}
+
 
 exports.postloginuser = async (req, res, next) => {
 
@@ -30,10 +37,15 @@ exports.postloginuser = async (req, res, next) => {
 
         if (response) {
 
-            //res.redirect('http://127.0.0.1:5500/FrontEnd/expensespage/expense.html')
-            globalMailId = useremail;
 
-            res.status(200).json({ successfullylogged: true })
+            console.log(response)
+
+            res.status(200).json({
+                data: {
+                    "successfullylogged": true,
+                    "token": genereteAcessToken(useremailexistinDb.dataValues.userid)
+                }
+            })
         } else {
 
 
@@ -49,3 +61,4 @@ exports.postloginuser = async (req, res, next) => {
 
 
 exports.mailID = globalMailId
+module.exports.genretareAccessToken = genereteAcessToken 

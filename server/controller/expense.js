@@ -27,10 +27,11 @@ exports.addExpense = (req, res, next) => {
 
 exports.getAllExpense = (req, res, next) => {
 
-    Expense.findAll().then((users) => {
+    console.log(req.user.userid)
+    Expense.findAll({ where: { userUserid: req.user.userid } }).then((usersexpenses) => { //useruserid is foregnkey
         //console.log(users)
 
-        return res.json({ alldata: users }) // sent users as arrays so we can parse in FE dont send stringifying as json send arrays as json obj
+        return res.json({ alldata: usersexpenses }) // sent users as arrays so we can parse in FE dont send stringifying as json send arrays as json obj
 
     }).catch(err => console.log(err))
 
@@ -42,7 +43,7 @@ exports.deleteUser = (req, res, next) => {
     console.log(req.params)
     Expense.findByPk(id)
         .then((response) => {
-            return response.destroy();
+            return response.destroy({ where: { userUserid: req.user.userid, userid: id } });
         }).then((result) => {
             //console.log(result)
 
@@ -56,7 +57,7 @@ exports.getSingleUser = (req, res, next) => {
 
     //console.log(req.params)
     let id = +req.params.userid;
-    Expense.findByPk(id)
+    Expense.findByPk({ where: { userUserid: req.user.userid, userid: id } })
         .then(result => {
             console.log(result)
 

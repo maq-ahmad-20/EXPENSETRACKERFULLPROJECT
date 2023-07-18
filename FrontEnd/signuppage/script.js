@@ -62,13 +62,15 @@ document.getElementById('create-user-button').addEventListener('click', async (e
             if (postResponse.success === false) {
                 alert('User All Ready Exits')
             } else if (postResponse.message === "successfullyusercreated") {
+
+                document.querySelector('#name').value = "";
+                document.querySelector('#email').value = "";
+                document.querySelector('#phonenumber').value = "";
+                document.querySelector('#password').value = "";
                 alert('User created Successfully')
+                window.location.replace("../loginPage/login.html");
             }
 
-            document.querySelector('#name').value = "";
-            document.querySelector('#email').value = "";
-            document.querySelector('#phonenumber').value = "";
-            document.querySelector('#password').value = "";
 
 
         } catch (err) {

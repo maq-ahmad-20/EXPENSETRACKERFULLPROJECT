@@ -53,7 +53,9 @@ document.getElementById('login-user-button').addEventListener('click', async (e)
                 alert("please enter Correct password")
             } else if (postDataJson.data === "User not found") {
                 alert("User doesnot exist .. Please create new user by sigining up ")
-            } else if (postDataJson.successfullylogged == true) {
+            } else if (postDataJson.data.successfullylogged == true) {
+
+                localStorage.setItem("token", postDataJson.data.token);
                 window.location.replace("../expensespage/expense.html");
             }
 
