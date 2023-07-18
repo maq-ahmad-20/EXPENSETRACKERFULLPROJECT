@@ -115,3 +115,48 @@ async function deleteDataOnScreen(id) {
 
 
 
+// buy premium functionality
+
+document.querySelector('#buy-premium-button').addEventListener('click', async (e) => {
+    try {
+
+        const token = localStorage.getItem('token');
+        console.log(token)
+
+        let paymentreq = await fetch(`${url}/purchasepremiermembership`, {
+            headers: {
+                'Authorization': token
+            }
+        })
+        var options = {
+            key: paymentreq.data.key_id,
+            order_id: paymentreq.data.order.id,
+            handler: async function (response) {
+                const res = await fetch(
+                    `${url}/updateTransactionStatus`,
+                    { headers: { Authorization: token } },
+                    {
+                        body: {
+                            order_id: options.order_id,
+                            payment_id: response.razorpay_payment_id,
+                        }
+
+                    });
+
+                console.log(res);
+                alert(
+                    "Welcome to our Premium Membership, You have now access to Reports and LeaderBoard"
+                );
+                window.location.reload();
+                localStorage.setItem("token", res.data.token);
+            }
+
+        }
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+
+    } catch (err) {
+        console.log(err);
+    }
+})

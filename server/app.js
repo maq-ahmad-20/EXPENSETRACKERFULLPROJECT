@@ -7,6 +7,8 @@ const loginRouter = require('./router/login')
 const User = require('../server/model/user')
 const Expense = require('../server/model/expense')
 const expenseRouter = require('./router/expense')
+const Premiumorders = require('./model/premiumorder')
+const premiumOrderRouter = require('./router/premiumorder')
 const app = express();
 
 
@@ -30,15 +32,22 @@ app.use(userRouter)
 
 app.use(loginRouter);
 app.use(expenseRouter)
+app.use(premiumOrderRouter)
 
 Expense.belongsTo(User);
 User.hasMany(Expense);
 
-sequelize.sync({ alter: true }).then((result) => {
 
+
+
+User.hasMany(Premiumorders);
+Premiumorders.belongsTo(User);
+
+sequelize.sync().then((result) => {
+
+    app.listen(7000);
 
 
     console.log("Sequalizeworking")
 })
 
-app.listen(7000);
