@@ -10,6 +10,9 @@ const expenseRouter = require('./router/expense')
 const Order = require('./model/premiumorder')
 const premiumOrderRouter = require('./router/premiumorder')
 const leaderboardRouter = require('./router/leaderboard')
+const forgotPasswordRouter = require('./router/forgotpassword')
+
+require('dotenv').config()
 const app = express();
 
 
@@ -35,6 +38,7 @@ app.use(loginRouter);
 app.use(expenseRouter)
 app.use(premiumOrderRouter)
 app.use(leaderboardRouter)
+app.use('/password', forgotPasswordRouter)
 
 Expense.belongsTo(User);
 User.hasMany(Expense);
