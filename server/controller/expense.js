@@ -2,9 +2,12 @@ const express = require('express');
 
 const Expense = require('../model/expense');
 
-const User = require('../model/user')
+const User = require('../model/user');
+const sequelize = require('../util/db');
 
 exports.addExpense = async (req, res, next) => {
+
+    const transaction = await sequelize.transaction();
 
     try {
 
@@ -15,23 +18,31 @@ exports.addExpense = async (req, res, next) => {
         console.log(updateAmount)
 
         let udpateusertotalexpense = await User.update(
-            { totalexpense: updateAmount }, { where: { userid: req.user.userid } }
+            { totalexpense: updateAmount }, { where: { userid: req.user.userid } }, { transaction: transaction }
         )
 
         let response = await req.user.createExpense({
             expense: expense,
             description: description,
             item: item
+        },
+            { transaction: transaction }
 
 
-        })
+        )
+        await transaction.commit();
         let data = response['dataValues']; // coz response id object with datavalues inside expense
         console.log(response) // log it for refference
         console.log(data)
         return res.json({ InsertedData: { data } })
 
-    } catch (err) {
-        console.log(err)
+    } catch {
+        async (err) => {
+
+            await transaction.rollback();
+
+            console.log(err)
+        }
     }
 }
 
@@ -50,22 +61,30 @@ exports.getAllExpense = (req, res, next) => {
 
 
 exports.deleteUserExpense = async (req, res, next) => {
-
+    const transaction = await sequelize.transaction();
     try {
+
         let id = +req.params.userid
 
         console.log(req.params)
 
         let expense = await Expense.findByPk(id);
-        await User.update({ totalexpense: req.user.totalexpense - expense.expense }, { where: { userid: req.user.userid } });
+        await User.update({ totalexpense: req.user.totalexpense - Number(expense.expense) }, { where: { userid: req.user.userid } }
+            , { transaction: transaction }
+        );
 
-        Expense.destroy({ where: { id: id } }).then((result) => {
+        await Expense.destroy({ where: { id: id } }, { transaction: transaction })
 
-            res.json({ success: true })
-        })
+        await transaction.commit()
+        res.json({ success: true })
 
-    } catch (err) {
-        console.log(err)
+
+    } catch {
+
+        (err) => {
+            transaction.rollback()
+            console.log(err)
+        }
     }
 }
 
