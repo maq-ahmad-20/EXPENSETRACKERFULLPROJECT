@@ -13,7 +13,7 @@ exports.getAllExpensesOfUSers = async (req, res, next) => {
 
 
         let userAggregatedata = await User.findAll({
-            attributes: ['userid', 'username', [sequelize.fn('sum', sequelize.col('expenses.expense')), 'total_cost']],
+            attributes: ['userid', 'username', [sequelize.fn('sum', sequelize.col('users.totalexpense')), 'total_cost']],
             include: [
                 {
                     model: Expense,

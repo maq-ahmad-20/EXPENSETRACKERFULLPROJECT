@@ -43,7 +43,7 @@ formbutton.onclick = async function (e) {
 
             },
             method: "POST",
-            body: JSON.stringify({ expense: expense, description: description, item: item })
+            body: JSON.stringify({ expense: expense, description: description, item: item, expenseamount: expense })
         })
 
 

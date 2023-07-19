@@ -4,24 +4,35 @@ const Expense = require('../model/expense');
 
 const User = require('../model/user')
 
-exports.addExpense = (req, res, next) => {
+exports.addExpense = async (req, res, next) => {
 
-    const { expense, description, item } = req.body
-    // console.log(req.body)
+    try {
+
+        const { expense, description, item, expenseamount } = req.body
+        // console.log(req.body)
+
+        let updateAmount = req.user.totalexpense + Number(expenseamount);
+        console.log(updateAmount)
+
+        let udpateusertotalexpense = await User.update(
+            { totalexpense: updateAmount }, { where: { userid: req.user.userid } }
+        )
+
+        let response = await req.user.createExpense({
+            expense: expense,
+            description: description,
+            item: item
 
 
-    req.user.createExpense({
-        expense: expense,
-        description: description,
-        item: item
-
-    }).then((response) => {
+        })
         let data = response['dataValues']; // coz response id object with datavalues inside expense
         console.log(response) // log it for refference
         console.log(data)
         return res.json({ InsertedData: { data } })
-    })
 
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 
