@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "segoe ui", verdana, helvetica, arial, sans-serif;
+    font-size: 16px;
+
+    }
+
+  
+  .innerbox{
+    position: relative;
+    border: 1px solid black;
+     margin-top:100px;
+     margin-left: 400px;
+     width: 70vh;
+     height: 70vh;
+    text-align: center;
+    background-color:#1589FF;
+  }   
+  
+.forgotText{
+     margin-top: 150px;
+     background-color:#1589FF;
+}
