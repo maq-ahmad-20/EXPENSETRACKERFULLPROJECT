@@ -49,22 +49,28 @@ exports.getAllExpense = (req, res, next) => {
 }
 
 
-exports.deleteUser = (req, res, next) => {
-    let id = +req.params.userid
-    console.log(req.params)
-    Expense.findByPk(id)
-        .then((response) => {
-            return response.destroy({ where: { userUserid: req.user.userid, userid: id } });
-        }).then((result) => {
-            //console.log(result)
+exports.deleteUserExpense = async (req, res, next) => {
+
+    try {
+        let id = +req.params.userid
+
+        console.log(req.params)
+
+        let expense = await Expense.findByPk(id);
+        await User.update({ totalexpense: req.user.totalexpense - expense.expense }, { where: { userid: req.user.userid } });
+
+        Expense.destroy({ where: { id: id } }).then((result) => {
 
             res.json({ success: true })
         })
 
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 
-exports.getSingleUser = (req, res, next) => {
+exports.getSingleUserExpense = (req, res, next) => {
 
     //console.log(req.params)
     let id = +req.params.userid;

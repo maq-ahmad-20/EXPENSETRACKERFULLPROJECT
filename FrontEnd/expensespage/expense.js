@@ -71,6 +71,7 @@ async function deleteDataOnScreen(id) {
 
     try {
         const token = localStorage.getItem("token");
+
         let deleteData = await fetch(`${url}/deleteuserexpense/` + id, {
             headers: {
                 'Authorization': token
