@@ -1,36 +1,8 @@
 const url = 'http://localhost:7000';
 
+const buyPremiumButton = document.querySelector('#buy-premium-button');
 
 
-document.addEventListener('DOMContentLoaded', async (e) => {
-
-    try {
-        e.preventDefault();
-        const token = localStorage.getItem("token");
-        let totalData = await fetch(`${url}/getAllExpense`, {
-            headers: {
-                'Authorization': token
-            }
-        });
-
-        let totalJsonData = await totalData.json();
-
-
-
-        //console.log(totalJsonData.alldata)
-
-        totalJsonData.alldata.forEach(element => {
-
-            addUserToScreen(element)
-        });
-
-        // loadHtmlData(totalJsonData['data'])
-    } catch (err) {
-        console.log(err);
-
-
-    }
-})
 
 function addUserToScreen(data) {
     const tbody = document.querySelector('table tbody')
@@ -165,7 +137,9 @@ async function deleteDataOnScreen(id) {
 // })
 
 
-document.querySelector('#buy-premium-button').addEventListener('click', async (e) => {
+
+
+async function buyPremiumMemberShip(e) {
     try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
@@ -188,18 +162,92 @@ document.querySelector('#buy-premium-button').addEventListener('click', async (e
 
                 console.log(res);
                 alert(
-                    "Welcome to our Premium Membership"
+                    "Welcome to our Premium Membership.You have access to leaderboard"
                 );
                 window.location.reload();
                 localStorage.setItem("token", res.data.token);
+
             },
         };
         const rzp1 = new Razorpay(options);
         rzp1.open();
+
         e.preventDefault();
 
     } catch (err) {
         console.log(err)
     }
 
-});
+};
+
+// showing Premieruser on screen and also showing if he logins again
+
+async function isPremierUser() {
+
+    try {
+
+        let token = localStorage.getItem('token');
+
+        let checkIfPremerUser = await axios.get(`${url}/checkpremieruser`, {
+            headers: {
+                Authorization: token
+            }
+        })  // use axios so no need to convert the result to json
+
+        console.log(checkIfPremerUser.data.premierUser)
+        if (checkIfPremerUser.data.premierUser) {
+            document.getElementById('ispremiumuser').style.display = "inline";
+            document.getElementById('leader-board').style.display = "inline"
+            document.getElementById('leader-board').setAttribute("href", "../LeaderBoard/leaderboard.html");
+            document.getElementById('buy-premium-button').innerHTML = "Premium User";
+            buyPremiumButton.removeEventListener("click", buyPremiumMemberShip)
+
+            // window.location.replace("../LeaderBoard/leaderboard.html");
+        }
+
+
+
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', async (e) => {
+
+
+
+    try {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        let totalData = await fetch(`${url}/getAllExpense`, {
+            headers: {
+                'Authorization': token
+            }
+        });
+
+        let totalJsonData = await totalData.json();
+
+
+
+        //console.log(totalJsonData.alldata)
+
+        totalJsonData.alldata.forEach(element => {
+
+            addUserToScreen(element)
+        });
+
+        // loadHtmlData(totalJsonData['data'])
+    } catch (err) {
+        console.log(err);
+
+
+    }
+})
+
+document.addEventListener('DOMContentLoaded', isPremierUser);
+
+buyPremiumButton.addEventListener('click', buyPremiumMemberShip)

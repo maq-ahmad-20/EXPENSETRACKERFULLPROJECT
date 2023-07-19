@@ -12,6 +12,21 @@ const jwt = require('jsonwebtoken')
 function genereteAcessToken(id) {
     return jwt.sign({ userid: id }, 'my_secret_key')
 }
+exports.checkPremierUser = async (req, res, next) => {
+
+    try {
+
+        let user = req.user;
+        if (user.isPremiumUser) {
+
+            return res.json({ premierUser: true })
+        }
+        return res.json({ premierUser: false })
+
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 
 exports.postloginuser = async (req, res, next) => {

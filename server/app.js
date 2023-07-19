@@ -9,6 +9,7 @@ const Expense = require('../server/model/expense')
 const expenseRouter = require('./router/expense')
 const Order = require('./model/premiumorder')
 const premiumOrderRouter = require('./router/premiumorder')
+const leaderboardRouter = require('./router/leaderboard')
 const app = express();
 
 
@@ -33,6 +34,7 @@ app.use(userRouter)
 app.use(loginRouter);
 app.use(expenseRouter)
 app.use(premiumOrderRouter)
+app.use(leaderboardRouter)
 
 Expense.belongsTo(User);
 User.hasMany(Expense);
