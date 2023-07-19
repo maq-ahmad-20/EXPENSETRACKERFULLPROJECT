@@ -7,8 +7,8 @@ function addDataToScreen(data) {
 
     var tr = document.createElement('tr');
 
-    var TotalHtml = `<td>${data.name}</td>
-       <td>${data.totalexpense}</td>
+    var TotalHtml = `<td>${data.username}</td>
+       <td>${data.total_cost}</td>
        `
     tr.innerHTML = TotalHtml;
 
@@ -19,7 +19,7 @@ async function displayLeaderBoard() {
     try {
 
         let leaderBoardData = await axios.get(`${url}/getAllLeaderboardData`);
-        console.log(leaderBoardData.data)
+        console.log(leaderBoardData)
 
         leaderBoardData.data.forEach(data => {
             addDataToScreen(data)
