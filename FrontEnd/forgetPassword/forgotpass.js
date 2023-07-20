@@ -21,3 +21,4 @@ document.getElementById('reset-password-button').addEventListener('click', async
         alert('Hey.. Your are not registered with us please sign up ')
     }
 })
+

@@ -6,6 +6,7 @@ const userRouter = require('./router/user')
 const loginRouter = require('./router/login')
 const User = require('../server/model/user')
 const Expense = require('../server/model/expense')
+const ForgotPasswordRequest = require('./model/forgotpasswordrequest')
 const expenseRouter = require('./router/expense')
 const Order = require('./model/premiumorder')
 const premiumOrderRouter = require('./router/premiumorder')
@@ -49,6 +50,10 @@ User.hasMany(Expense);
 
 Order.belongsTo(User);
 User.hasMany(Order);
+
+ForgotPasswordRequest.belongsTo(User)
+User.hasMany(ForgotPasswordRequest);
+
 
 sequelize.sync().then((result) => {
 
