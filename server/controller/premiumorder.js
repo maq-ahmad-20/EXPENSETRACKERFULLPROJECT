@@ -8,12 +8,11 @@ exports.purchasePremiumMemberShip = async (req, res, mext) => {
 
     try {
         let userinstance = req.user;
-        const keyid = toString('rzp_test_A8Llrkpmmbp59B');
-        const keysecret = toString('HvC7TMGtrwdoIBFNRN4jyD96')
+
         console.log(req.user)
         var rzp = new razorPay({
-            key_id: 'rzp_test_tooPTvv21sOirb',
-            key_secret: 'ZPbFgsydMt4EoGig433ibeoE'
+            key_id: process.env.KEY_ID,
+            key_secret: process.env.KEY_SECRET
         });
 
         const amount = 50000;

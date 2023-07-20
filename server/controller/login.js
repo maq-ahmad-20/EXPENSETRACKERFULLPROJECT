@@ -1,5 +1,5 @@
 
-var globalMailId = "";
+
 
 const User = require('../model/user');
 
@@ -75,5 +75,5 @@ exports.postloginuser = async (req, res, next) => {
 }
 
 
-exports.mailID = globalMailId
+
 module.exports.genretareAccessToken = genereteAcessToken 
