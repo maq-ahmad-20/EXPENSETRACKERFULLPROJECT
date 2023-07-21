@@ -33,17 +33,23 @@ formbutton.onclick = async function (e) {
         const expense = document.querySelector('#expense').value;
         const description = document.querySelector('#desc').value;
         const item = document.querySelector('#item').value;
-
+        const date = new Date();
+        const day = date.getDate()
+        const month = date.getMonth() + 1; // as month start from 0
+        const year = date.getFullYear()
+        const formatDay = day.toString().padStart(2, "0"); // day < 10 ? `0${day}` : day;
+        const formatMonth = month.toString().padStart(2, "0"); //month < 10 ? `0${month}` : month;
+        const formatedDate = `${formatDay}-${formatMonth}-${year}` // save as dd-mm-yy as it helps to get yearly data in reports
 
         const token = localStorage.getItem("token");
-        let fetchData = await fetch(`${url}/addexpense`, {
+        let fetchData = await fetch(`${url}/expense/addexpense`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
 
             },
             method: "POST",
-            body: JSON.stringify({ expense: expense, description: description, item: item, expenseamount: expense })
+            body: JSON.stringify({ expense: expense, description: description, item: item, expenseamount: expense, date: formatedDate })
         })
 
 
@@ -72,7 +78,7 @@ async function deleteDataOnScreen(id) {
     try {
         const token = localStorage.getItem("token");
 
-        let deleteData = await fetch(`${url}/deleteuserexpense/` + id, {
+        let deleteData = await fetch(`${url}/expense/deleteuserexpense` + id, {
             headers: {
                 'Authorization': token
             },
@@ -90,52 +96,6 @@ async function deleteDataOnScreen(id) {
 
 // buy premium functionality fetch doesnot fork inside a call back function
 
-// document.querySelector('#buy-premium-button').addEventListener('click', async (e) => {
-//     try {
-//         e.preventDefault();
-//         const token = localStorage.getItem('token');
-//         console.log(token)
-
-//         let paymentreqcors = await fetch(`${url}/purchasepremiermembership`, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': token
-//             },
-//             method: 'GET'
-//         })
-//         let paymentreq = await paymentreqcors.json()
-//         console.log(paymentreq.order.id)
-//         console.log(paymentreq.key_id)
-//         var options = {
-//             key: paymentreq.key_id,
-//             order_id: paymentreq.order.id,
-//             handler: async function (response) {
-//                 const postres = await fetch(
-//                     `${url}/updateTransactionStatus`,
-//                     {
-//                         headers: { "Authorization": token },
-//                         method: "POST",
-//                         body: { order_id: options.order_id, payment_id: response.razorpay_payment_id },
-
-//                     });
-//                 const postreqJson = await postres.json()
-//                 console.log(postreqJson);
-//                 alert(
-//                     "Welcome to our Premium Membership, You have now access to Reports and LeaderBoard"
-//                 );
-//                 window.location.reload();
-//                 localStorage.setItem("token", res.data.token);
-//             }
-
-//         }
-//         const rzp1 = new Razorpay(options);
-//         rzp1.open();
-//         e.preventDefault();
-
-//     } catch (err) {
-//         console.log(err);
-//     }
-// })
 
 
 
@@ -163,7 +123,7 @@ async function buyPremiumMemberShip(e) {
 
                 console.log(res);
                 alert(
-                    "Welcome to our Premium Membership.You have access to leaderboard"
+                    "Welcome to our Premium Membership.You have access to Reports and leaderboard"
                 );
                 window.location.reload();
                 localStorage.setItem("token", res.data.token);
@@ -198,12 +158,20 @@ async function isPremierUser() {
         console.log(checkIfPremerUser.data.premierUser)
         if (checkIfPremerUser.data.premierUser) {
             document.getElementById('ispremiumuser').style.display = "inline";
-            document.getElementById('leader-board').style.display = "inline"
-            document.getElementById('leader-board').setAttribute("href", "../LeaderBoard/leaderboard.html");
+
+            document.getElementById('leaderboard').style.display = "inline";
+            document.getElementById('reports').style.display = "inline";
+            document.getElementById('notPremieruser').style.display = "none";
             document.getElementById('buy-premium-button').innerHTML = "Premium User";
             buyPremiumButton.removeEventListener("click", buyPremiumMemberShip)
+            document.getElementById('download-tfoot').style.display = 'inline'
 
-            // window.location.replace("../LeaderBoard/leaderboard.html");
+
+
+            return true;
+
+        } else {
+            return false;
         }
 
 
@@ -217,6 +185,7 @@ async function isPremierUser() {
 
 
 
+
 document.addEventListener('DOMContentLoaded', async (e) => {
 
 
@@ -224,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     try {
         e.preventDefault();
         const token = localStorage.getItem("token");
-        let totalData = await fetch(`${url}/getAllExpense`, {
+        let totalData = await fetch(`${url}/expense/getAllExpense`, {
             headers: {
                 'Authorization': token
             }
@@ -249,6 +218,68 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     }
 })
 
+document.getElementById('expenseDownloadButton').addEventListener('click', async (e) => {
+
+    try {
+        let token = localStorage.getItem('token');
+        let awsS3Data = await axios.get(`${url}/expense/download`, { headers: { Authorization: token } })
+        console.log(awsS3Data)
+        console.log(awsS3Data.status)
+        if (awsS3Data.status === 200) {
+
+            var anchor = document.createElement('a');
+            anchor.href = awsS3Data.data.fileUrl;
+            anchor.download = 'expeses.csv';
+            anchor.click();
+            addDownloadsToScreen(awsS3Data.data.fileUrl)
+
+        } else {
+            throw new Error(response.data.message)
+        }
+
+    } catch (err) {
+        console.log(err)
+    }
+
+})
+
+function addDownloadsToScreen(fileurl) {
+    const tbodyDown = document.getElementById('downloaded-links-tbody');
+
+    var tr = document.createElement('tr');
+
+
+    const anchor = `<a href= ${fileurl} download = "expenses.csv">${fileurl} </a>`
+    //anchor.click();
+
+    var TotalHtml = `<td>${anchor}</td>`
+
+
+    tr.innerHTML = TotalHtml;
+
+    tbodyDown.appendChild(tr)
+
+}
+
+async function showAllDownloadsOfUser() {
+    try {
+        let token = localStorage.getItem('token')
+        let downloads = await axios.get(`${url}/expense/allDownloads`, { headers: { Authorization: token } })
+
+        console.log(downloads.data.allData)
+
+        console.log(downloads.data.allData.fileurl)
+        downloads.data.allData.forEach((element, index) => {
+            addDownloadsToScreen(element.fileurl, index + 1)
+        })
+
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 document.addEventListener('DOMContentLoaded', isPremierUser);
+document.addEventListener('DOMContentLoaded', showAllDownloadsOfUser);
 
 buyPremiumButton.addEventListener('click', buyPremiumMemberShip)

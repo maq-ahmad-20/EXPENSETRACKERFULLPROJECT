@@ -23,11 +23,11 @@ const Expense = sequelize.define('expense', {
     item: {
         type: Sequelize.STRING,
         allowNull: true
+    },
+    date: {
+        type: Sequelize.STRING,
+        allowNull: true,
     }
-
-
-
-
 
 })
 

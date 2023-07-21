@@ -13,6 +13,10 @@ const premiumOrderRouter = require('./router/premiumorder')
 const leaderboardRouter = require('./router/leaderboard')
 const forgotPasswordRouter = require('./router/forgotpassword')
 
+const Download = require('./model/download')
+
+const reportsRouter = require('./router/reports')
+
 require('dotenv').config()
 const app = express();
 
@@ -36,10 +40,11 @@ app.use(express.json())
 app.use(userRouter)
 
 app.use(loginRouter);
-app.use(expenseRouter)
+app.use('/expense', expenseRouter)
 app.use(premiumOrderRouter)
 app.use(leaderboardRouter)
 app.use('/password', forgotPasswordRouter)
+app.use(reportsRouter)
 
 Expense.belongsTo(User);
 User.hasMany(Expense);
@@ -54,8 +59,11 @@ User.hasMany(Order);
 ForgotPasswordRequest.belongsTo(User)
 User.hasMany(ForgotPasswordRequest);
 
+User.hasMany(Download)
+Download.belongsTo(User)
 
-sequelize.sync().then((result) => {
+
+sequelize.sync({ alter: true }).then((result) => {
 
     app.listen(7000);
 
