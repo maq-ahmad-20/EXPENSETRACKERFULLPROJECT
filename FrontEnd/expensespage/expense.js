@@ -4,7 +4,7 @@ const buyPremiumButton = document.querySelector('#buy-premium-button');
 
 
 
-function addUserToScreen(data) {
+function addUserExpenseToScreen(data) {
     const tbody = document.querySelector('table tbody')
 
     var tr = document.createElement('tr');
@@ -18,6 +18,10 @@ function addUserToScreen(data) {
     tbody.appendChild(tr)
 }
 
+function deluserExpenseOnScreen() {
+    const tbody = document.querySelector('table tbody')
+    tbody.innerHTML = "";
+}
 
 
 
@@ -61,7 +65,7 @@ formbutton.onclick = async function (e) {
         document.querySelector('#expense').value = "";
         document.querySelector('#desc').value = "";
         document.querySelector('#item').value = "";
-        addUserToScreen(objectData);
+        addUserExpenseToScreen(objectData);
 
 
     } catch (err) {
@@ -165,6 +169,10 @@ async function isPremierUser() {
             document.getElementById('buy-premium-button').innerHTML = "Premium User";
             buyPremiumButton.removeEventListener("click", buyPremiumMemberShip)
             document.getElementById('download-tfoot').style.display = 'inline'
+            document.getElementById('showPreviousDownloads').style.display = "block"
+            document.getElementById('showPreviousDownloads').style.marginTop = "80px"
+            document.getElementById('showPreviousDownloads').style.width = "100%"
+
 
 
 
@@ -182,8 +190,52 @@ async function isPremierUser() {
 
 }
 
+function showPagination(data) {
+    let paginationUl = document.getElementById('paginationList')
+
+    for (let i = 1; i <= data.totalCount; i++) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        li.setAttribute("class", "page-item");
+        a.setAttribute("class", "page-link");
+        a.setAttribute("href", "#");
+        a.appendChild(document.createTextNode(i));
+        li.appendChild(a);
+        paginationUl.appendChild(li);
+        a.addEventListener("click", pagiationDisplay);
+    }
 
 
+}
+
+async function pagiationDisplay(e) {
+
+    try {
+        const token = localStorage.getItem("token");
+        const pageno = e.target.textContent
+        let totalData = await axios.get(`${url}/expense/getAllExpense/${pageno}`, {
+            headers: {
+                'Authorization': token
+            }
+        })
+
+        console.log(totalData)
+
+        console.log(totalData.data.expensesData)
+
+
+        deluserExpenseOnScreen();
+
+        totalData.data.expensesData.forEach(data => {
+            addUserExpenseToScreen(data)
+        })
+
+
+
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 
 document.addEventListener('DOMContentLoaded', async (e) => {
@@ -192,25 +244,29 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
     try {
         e.preventDefault();
+        const page = 1;
         const token = localStorage.getItem("token");
-        let totalData = await fetch(`${url}/expense/getAllExpense`, {
+        let totalData = await axios.get(`${url}/expense/getAllExpense/${page}`, {
             headers: {
                 'Authorization': token
             }
         });
 
-        let totalJsonData = await totalData.json();
+        console.log(totalData)
+
+        console.log(totalData.data.expensesData)
+        console.log(totalData.data.hasNextPage)
+
+        totalData.data.expensesData.forEach(data => {
+            addUserExpenseToScreen(data)
+        })
+
+
+        showPagination(totalData.data)
 
 
 
-        //console.log(totalJsonData.alldata)
 
-        totalJsonData.alldata.forEach(element => {
-
-            addUserToScreen(element)
-        });
-
-        // loadHtmlData(totalJsonData['data'])
     } catch (err) {
         console.log(err);
 
@@ -266,9 +322,9 @@ async function showAllDownloadsOfUser() {
         let token = localStorage.getItem('token')
         let downloads = await axios.get(`${url}/expense/allDownloads`, { headers: { Authorization: token } })
 
-        console.log(downloads.data.allData)
+        // console.log(downloads.data.allData)
 
-        console.log(downloads.data.allData.fileurl)
+        //  console.log(downloads.data.allData.fileurl)
         downloads.data.allData.forEach((element, index) => {
             addDownloadsToScreen(element.fileurl, index + 1)
         })
@@ -281,5 +337,6 @@ async function showAllDownloadsOfUser() {
 
 document.addEventListener('DOMContentLoaded', isPremierUser);
 document.addEventListener('DOMContentLoaded', showAllDownloadsOfUser);
+
 
 buyPremiumButton.addEventListener('click', buyPremiumMemberShip)

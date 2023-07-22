@@ -1,0 +1,17 @@
+
+
+  .pagination-buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  .page-btn {
+    background: #ddd;
+    color: #0f4dea;
+    height: 35px;
+    border-radius: 2px;
+    padding: 0 10px;
+    text-transform: uppercase;
+ 
+
+  }

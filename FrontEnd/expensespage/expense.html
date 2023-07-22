@@ -10,10 +10,10 @@
 </head>
 
 <body>
-    <div class="container">
-        <nav class="navbar bg-primary" id="navigation">
 
+    <nav class="navbar navbar-expand-lg  bg-primary" id="navigation">
 
+        <div class="container">
             <p style="display: none;" class="navbar-nav ml-auto" id="ispremiumuser">You are now a premium user </p>
 
 
@@ -29,11 +29,11 @@
             </button>
 
 
+        </div>
 
 
+    </nav>
 
-        </nav>
-    </div>
 
     <div class="innerbox1" style="margin-top: 10px;">
         <div class="form-row ">
@@ -84,30 +84,46 @@
 
 
             </tbody>
-            <tfoot class="table-borderless" style="display: none;" id="download-tfoot">
-                <tr>
 
-                    <td colspan="4">
-                        <button id="expenseDownloadButton" class=" btn btn-primary">
-                            DownloadExpenses
-                        </button>
-                    </td>
-                </tr>
-            </tfoot>
 
         </table>
 
-        <table id="showPreviousDonloads" class="table-bordered" style="margin-top: 30px;">
-            <thead>
-                <tr>
 
-                    <td>PLEASE LOOK AT YOUR PREVIOUS DOWNLOADED DETAILS</td>
+        <table>
+            <thead class="table-borderless" style="display: none;" id="download-tfoot">
+                <tr class="">
+                    <th> </th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="4">
+                        <button id="expenseDownloadButton" class=" btn btn-primary">
+                            DownloadExpenses
+                        </button>
+                    </th>
                 </tr>
+            </thead>
+        </table>
+
+        <nav aria-label="Page navigation example">
+            <ul id="paginationList" class="pagination justify-content-md-end">
+
+            </ul>
+        </nav>
+
+        <table id="showPreviousDownloads" class="table table-bordered" style="display: none;">
+            <thead>
+                <th>
+
+
+                    <p style="text-align: center;">PLEASE LOOK AT YOUR PREVIOUS DOWNLOADED DETAILS</p>
+
+                </th>
             </thead>
             <tbody id="downloaded-links-tbody">
 
             </tbody>
         </table>
+
 
     </div>
 
