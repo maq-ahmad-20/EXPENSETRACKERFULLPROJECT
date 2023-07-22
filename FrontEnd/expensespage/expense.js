@@ -190,6 +190,15 @@ async function isPremierUser() {
 
 }
 
+document.getElementById('pages-selected').addEventListener('change', (e) => {
+    let pagesDataSelected = document.getElementById('pages-selected').value || 10;
+    localStorage.setItem('dataOnPage', pagesDataSelected)
+    location.reload()
+})
+
+
+
+
 function showPagination(data) {
     let paginationUl = document.getElementById('paginationList')
 
@@ -212,10 +221,12 @@ async function pagiationDisplay(e) {
 
     try {
         const token = localStorage.getItem("token");
+        const dataOnPage = localStorage.getItem('dataOnPage')
         const pageno = e.target.textContent
-        let totalData = await axios.get(`${url}/expense/getAllExpense/${pageno}`, {
+        let totalData = await axios.get(`${url}/expense/getAllExpense/${pageno}/${dataOnPage}`, {
             headers: {
-                'Authorization': token
+                'Authorization': token,
+
             }
         })
 
@@ -244,9 +255,11 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
     try {
         e.preventDefault();
-        const page = 1;
+
+        const pagesDataSelected = localStorage.getItem('dataOnPage') || 10
+
         const token = localStorage.getItem("token");
-        let totalData = await axios.get(`${url}/expense/getAllExpense/${page}`, {
+        let totalData = await axios.get(`${url}/expense/getAllExpense/1/${pagesDataSelected}`, {
             headers: {
                 'Authorization': token
             }
