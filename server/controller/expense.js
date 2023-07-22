@@ -184,9 +184,9 @@ exports.deleteUserExpense = async (req, res, next) => {
 
 exports.getSingleUserExpense = (req, res, next) => {
 
-    //console.log(req.params)
-    let id = +req.params.userid;
-    Expense.findByPk({ where: { userUserid: req.user.userid, userid: id } })
+
+    let id = +req.params.expenseid;
+    Expense.findOne({ where: { userUserid: req.user.userid, id: id } })
         .then(result => {
             console.log(result)
 
@@ -198,22 +198,37 @@ exports.getSingleUserExpense = (req, res, next) => {
 }
 
 
-exports.editUser = (req, res, next) => {
+exports.editUserExpense = async (req, res, next) => {
 
-    console.log(req.body)
 
-    const { id, expense, description, item } = req.body
+    try {
+        console.log(req.user)
+        console.log(req.body)
+        const { id, expense, description, item } = req.body
 
-    Expense.findByPk(id)
-        .then((record) => {
-            record.update({
+        const prevExpense = await Expense.findOne({ where: { id: id, userUserid: req.user.userid } })
+
+        await User.update(
+            {
+                totalexpense: req.user.totalexpense - prevExpense.expense + Number(expense),
+            },
+            { where: { userid: req.user.userid } }
+        );
+
+        let response = await Expense.update(
+            {
                 expense: expense,
                 description: description,
-                item: item
-            }).then((response) => {
-                res.json({ updatedData: response })
-            })
-        })
+                item: item,
+            },
+            { where: { id: id, userUserid: req.user.userid } }
+        );
+
+        res.json({ updatedData: response })
+
+    } catch (err) {
+        console.log(err)
+    }
 
 
 

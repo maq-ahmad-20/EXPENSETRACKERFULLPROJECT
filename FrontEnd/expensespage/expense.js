@@ -11,8 +11,9 @@ function addUserExpenseToScreen(data) {
 
     var TotalHtml = `<td>${data.expense}</td>
        <td>${data.description}</td><td>${data.item}</td>
-       <td><button class="del-button btn btn-danger" type="submit"  id =${data.id} onclick ="deleteDataOnScreen('${data.id}')">Delete</button></td>
-        `
+       <td><button class="del-button btn btn-danger" type="submit"  id =${data.id} onclick ="deleteExpenseOnScreen('${data.id}')">Delete</button></td>
+       <td><button class="edit-button btn btn-primary" type="submit" id="${data.id}${data.expense}" onclick="editExpenseData('${data.id}' , '${data.id}${data.expense}')" >Edit</button></td>
+       `
     tr.innerHTML = TotalHtml;
 
     tbody.appendChild(tr)
@@ -22,6 +23,7 @@ function deluserExpenseOnScreen() {
     const tbody = document.querySelector('table tbody')
     tbody.innerHTML = "";
 }
+
 
 
 
@@ -58,7 +60,7 @@ formbutton.onclick = async function (e) {
 
 
         let jsonFetchdata = await fetchData.json()
-
+        console.log(jsonFetchdata)
         var objectData = jsonFetchdata['InsertedData']['data'];
 
 
@@ -77,12 +79,12 @@ formbutton.onclick = async function (e) {
 }
 
 
-async function deleteDataOnScreen(id) {
+async function deleteExpenseOnScreen(id) {
 
     try {
         const token = localStorage.getItem("token");
 
-        let deleteData = await fetch(`${url}/expense/deleteuserexpense` + id, {
+        let deleteData = await fetch(`${url}/expense/deleteuserexpense/` + id, {
             headers: {
                 'Authorization': token
             },
@@ -95,6 +97,82 @@ async function deleteDataOnScreen(id) {
         console.log(err);
     }
 }
+
+
+async function editExpenseData(id, editbuttonid) {
+    try {
+        const token = localStorage.getItem('token')
+        document.getElementById('addexpensebox').innerHTML = '';
+        console.log(document.getElementById('addexpensebox'))
+
+        document.getElementById('updatebox').innerHTML = `<button id="expenseupdatebutton" class=" btn btn-primary">
+        Edit Expense
+    </button>`
+        console.log(editbuttonid)
+
+
+        let getData = await fetch(`${url}/expense/getExpense/${id}`, { headers: { 'Authorization': token }, method: 'GET' });
+
+        let getDataJson = await getData.json();
+
+        let getDataObj = getDataJson['fethchedSingleData'];
+        console.log(getDataObj.expense, getDataObj.description, getDataObj.item)
+        document.querySelector('#expense').value = getDataObj.expense
+        document.querySelector('#desc').value = getDataObj.description
+        document.querySelector('#item').value = getDataObj.item
+
+
+
+        document.getElementById('expenseupdatebutton').onclick = async function (e) {
+            e.preventDefault();
+            var expense = document.getElementById('expense').value;
+            var description = document.getElementById('desc').value;
+            var item = document.getElementById('item').value
+
+            console.log(e.target);
+
+            let editedData = await fetch(`${url}/expense/expensechange`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                method: "PUT",
+                body: JSON.stringify({ id: id, expense: expense, description: description, item: item })
+
+            })
+
+            let jsonEditedData = await editedData.json();
+
+            console.log(jsonEditedData)
+
+            console.log(editbuttonid)
+            console.log(document.getElementById(editbuttonid));
+
+            document.getElementById(editbuttonid).parentElement.parentElement.cells[0].innerHTML = expense
+            document.getElementById(editbuttonid).parentElement.parentElement.cells[1].innerHTML = description
+            document.getElementById(editbuttonid).parentElement.parentElement.cells[2].innerHTML = item
+
+            document.getElementById('expense').value = "";
+            document.getElementById('desc').value = "";
+            document.getElementById('item').value = "";
+
+
+            document.getElementById('addexpensebox').innerHTML = `<button id="expenseaddbutton" class=" btn btn-primary">
+            Add Expense
+        </button>`;
+            document.getElementById('updatebox').innerHTML = '';
+
+
+
+        }
+
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+
+
 
 
 
@@ -161,6 +239,7 @@ async function isPremierUser() {
 
         console.log(checkIfPremerUser.data.premierUser)
         if (checkIfPremerUser.data.premierUser) {
+
             document.getElementById('ispremiumuser').style.display = "inline";
 
             document.getElementById('leaderboard').style.display = "inline";
@@ -168,6 +247,7 @@ async function isPremierUser() {
             document.getElementById('notPremieruser').style.display = "none";
             document.getElementById('buy-premium-button').innerHTML = "Premium User";
             buyPremiumButton.removeEventListener("click", buyPremiumMemberShip)
+            buyPremiumButton.style.display = 'none'
             document.getElementById('download-tfoot').style.display = 'inline'
             document.getElementById('showPreviousDownloads').style.display = "block"
             document.getElementById('showPreviousDownloads').style.marginTop = "80px"
@@ -347,6 +427,17 @@ async function showAllDownloadsOfUser() {
         console.log(err)
     }
 }
+
+
+document.getElementById('logout-button').addEventListener('click', async (e) => {
+    try {
+        localStorage.clear();
+        window.location.href = "../loginPage/login.html";
+    } catch (error) {
+        console.log(error);
+    }
+
+})
 
 document.addEventListener('DOMContentLoaded', isPremierUser);
 document.addEventListener('DOMContentLoaded', showAllDownloadsOfUser);
