@@ -2,12 +2,12 @@
 const url = 'http://localhost:7000';
 
 
-function addDataToScreen(data) {
+function addDataToScreen(data, index) {
     const tbody = document.querySelector('table tbody')
 
     var tr = document.createElement('tr');
 
-    var TotalHtml = `<td>${data.username}</td>
+    var TotalHtml = `<td>${index + 1}</td><td>${data.username}</td>
        <td>${data.total_cost}</td>
        `
     tr.innerHTML = TotalHtml;
@@ -21,8 +21,8 @@ async function displayLeaderBoard() {
         let leaderBoardData = await axios.get(`${url}/getAllLeaderboardData`);
         console.log(leaderBoardData)
 
-        leaderBoardData.data.forEach(data => {
-            addDataToScreen(data)
+        leaderBoardData.data.forEach((data, index) => {
+            addDataToScreen(data, index)
         })
 
     } catch (err) {
