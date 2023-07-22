@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/getExpense/:userid', userAuth.authentiateUser, expenseControl.getSingleUserExpense);
 //router.get('/getAllExpense', userAuth.authentiateUser, expenseControl.getAllExpense);
 
-router.get('/getAllExpense/:pageno', userAuth.authentiateUser, expenseControl.getAllExpense)
+router.get('/getAllExpense/:pageno/:dataOnPage', userAuth.authentiateUser, expenseControl.getAllExpense)
 
 router.get('/download', userAuth.authentiateUser, expenseControl.downloadUserExpenses)
 router.get('/allDownloads', userAuth.authentiateUser, expenseControl.getAllDownloadedFileUrls)

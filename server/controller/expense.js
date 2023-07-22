@@ -119,20 +119,24 @@ exports.getAllExpense = async (req, res, next) => {
 
     try {
 
-        let pageno = +req.params.pageno;
+        //const { pageno, dataOnPage } = req.params;
+        const pageno = +req.params.pageno
+        const dataOnPage = +req.params.dataOnPage
+
         console.log(pageno)
+        console.log(dataOnPage)
 
         let totalCount = await Expense.count({ where: { userUserid: req.user.userid } })
 
         let expenses = await Expense.findAll({
             where: { userUserid: req.user.userid },
-            offset: (pageno - 1) * 10,
-            limit: 10
+            offset: ((pageno - 1) * dataOnPage),
+            limit: dataOnPage
         })
         res.status(200).json({
             expensesData: expenses,
             currentPage: pageno,
-            hasNextPage: 10 * pageno < totalCount,
+            hasNextPage: dataOnPage * pageno < totalCount,
             nextPage: pageno + 1,
             hasPreviousPage: pageno > 1,
             previousPage: pageno - 1,
