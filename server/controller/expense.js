@@ -115,15 +115,36 @@ exports.addExpense = async (req, res, next) => {
 }
 
 
-exports.getAllExpense = (req, res, next) => {
+exports.getAllExpense = async (req, res, next) => {
 
-    console.log(req.user.userid)
-    Expense.findAll({ where: { userUserid: req.user.userid } }).then((usersexpenses) => { //useruserid is foregnkey
-        //console.log(users)
+    try {
 
-        return res.json({ alldata: usersexpenses }) // sent users as arrays so we can parse in FE dont send stringifying as json send arrays as json obj
+        let pageno = +req.params.pageno;
+        console.log(pageno)
 
-    }).catch(err => console.log(err))
+        let totalCount = await Expense.count({ where: { userUserid: req.user.userid } })
+
+        let expenses = await Expense.findAll({
+            where: { userUserid: req.user.userid },
+            offset: (pageno - 1) * 10,
+            limit: 10
+        })
+        res.status(200).json({
+            expensesData: expenses,
+            currentPage: pageno,
+            hasNextPage: 10 * pageno < totalCount,
+            nextPage: pageno + 1,
+            hasPreviousPage: pageno > 1,
+            previousPage: pageno - 1,
+            totalCount: Math.ceil(totalCount / 10)
+            //totalCount: totalCount
+
+        }) // sent users as arrays so we can parse in FE dont send stringifying as json send arrays as json obj
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ success: false })
+    }
 
 }
 
