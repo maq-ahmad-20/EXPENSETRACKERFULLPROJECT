@@ -1,5 +1,6 @@
 const express = require('express');
 const sequelize = require('./util/db')
+const fs = require('fs')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRouter = require('./router/user')
@@ -23,7 +24,13 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
+const accessLogStream = fs.createWriteStream(
+    'access.log',
+    { flags: "a" }
+);
 
+const morgan = require("morgan");
+app.use(morgan("combined", { stream: accessLogStream }));
 
 
 
